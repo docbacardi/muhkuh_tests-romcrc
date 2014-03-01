@@ -1,6 +1,7 @@
 
-#include "netx_io_areas.h"
+#include "main_test.h"
 
+#include "crc.h"
 #include "netx_test.h"
 #include "rdy_run.h"
 #include "systime.h"
@@ -9,66 +10,38 @@
 
 /*-----------------------------------*/
 
-static void ramtest_rdyrun_progress(struct RAMTEST_PARAMETER_STRUCT *ptRamTestParameter, RAMTEST_RESULT_T tResult)
-{
-	unsigned long ulProgress;
-
-
-	if( tResult==RAMTEST_RESULT_OK )
-	{
-		ulProgress = ptRamTestParameter->ulProgress;
-		if( ulProgress==0 )
-		{
-			rdy_run_setLEDs(RDYRUN_GREEN);
-		}
-		else
-		{
-			rdy_run_setLEDs(RDYRUN_OFF);
-		}
-
-		ulProgress ^= 1;
-		ptRamTestParameter->ulProgress = ulProgress;
-	}
-	else
-	{
-		rdy_run_setLEDs(RDYRUN_YELLOW);
-	}
-}
-
-
 TEST_RESULT_T test(TEST_PARAMETER_T *ptTestParam)
 {
 	TEST_RESULT_T tTestResult;
-	RAMTEST_RESULT_T tRamTestResult;
-	RAMTEST_PARAMETER_T *ptTestParams;
+	CRCTEST_PARAMETER_T *ptTestParams;
+	const unsigned char *pucCnt;
+	const unsigned char *pucEnd;
 
 
 	systime_init();
 
-	uprintf("\f. *** RAM test by cthelen@hilscher.com ***\n");
+	uprintf("\f. *** CRC test by doc_bacardi@users.sourceforge.net ***\n");
 	uprintf("V" VERSION_ALL "\n\n");
 
 	/* Switch off SYS led. */
 	rdy_run_setLEDs(RDYRUN_OFF);
 
-	ptTestParams = (RAMTEST_PARAMETER_T*)(ptTestParam->pvInitParams);
+	/* Get the test parameter. */
+	ptTestParams = (CRCTEST_PARAMETER_T*)(ptTestParam->pvInitParams);
 
-	ptTestParams->pfnProgress = ramtest_rdyrun_progress;
-	ptTestParams->ulProgress = 0;
-
-	tRamTestResult = ramtest_run(ptTestParams);
-
-	/* Translate RAMTEST result to TEST result. */
-	if( tRamTestResult==RAMTEST_RESULT_OK )
+	/* Build the CRC for */
+	pucCnt = ptTestParams->pucAreaStart;
+	pucEnd = ptTestParams->pucAreaEnd;
+	
+	crc_init_crc32();
+	while( pucCnt<pucEnd )
 	{
-		rdy_run_setLEDs(RDYRUN_GREEN);
-		tTestResult = TEST_RESULT_OK;
+		crc_update( *(pucCnt++) );
 	}
-	else
-	{
-		rdy_run_setLEDs(RDYRUN_YELLOW);
-		tTestResult = TEST_RESULT_ERROR;
-	}
+	ptTestParams->ulCrc32 = crc_get_crc32();
+
+	rdy_run_setLEDs(RDYRUN_GREEN);
+	tTestResult = TEST_RESULT_OK;
 
 	return tTestResult;
 }

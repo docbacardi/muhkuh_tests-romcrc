@@ -35,7 +35,6 @@ Import('platform_lib_netx500', 'platform_lib_netx56', 'platform_lib_netx50', 'pl
 sources_common = """
 	src/crc.c
 	src/header.c
-	src/burst_access.s
 	src/init_netx_test.S
 	src/main_test.c
 	src/netx_test.c
