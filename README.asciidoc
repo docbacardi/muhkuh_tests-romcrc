@@ -1,0 +1,37 @@
+Test case "ROM"
+===============
+Christoph Thelen <cthelen@hilscher.com>
+:Author Initials: CT
+
+
+[[About, About]]
+== About
+
+This document describes the "ROM" test for the Muhkuh test framework. It builds a checksum over the complete built-in ROM area of the netX controller and compares it with the expected value. The chapter <<Test_description>> discusses this method in detail.
+
+
+[[Test_description,Test description]]
+== Test description
+
+The ROM test builds a CRC32 checksum over the complete ROM area of the netX controller. The location of the ROM area differes for the netX controllers:
+
+[cols=">,>m,>m",options="header"]
+|================================
+|    netX|      start|        end
+| netX500| 0x00200000| 0x00208000
+| netX100| 0x00200000| 0x00208000
+|  netX52| 0x080f0000| 0x08100000
+|  netX51| 0x080f0000| 0x08100000
+|  netX50| 0x08200000| 0x08210000
+|  netX10| 0x08070000| 0x08080000
+|================================
+
+The CRC32 checksum is defined by the ITU-T V.42 32-bit frame check sequence. It is the same checksum used for the Ethernet FCS field.
+
+
+[[Parameters, Parameters]]
+== Parameters
+
+The ROM test has no parameters.
+
+
