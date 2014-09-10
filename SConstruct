@@ -27,6 +27,8 @@
 SConscript('mbs/SConscript')
 Import('env_default')
 
+import os.path
+
 
 #----------------------------------------------------------------------------
 #
@@ -99,6 +101,34 @@ aAttribs.update(dict({
 }))
 
 doc = env_default.Asciidoc('targets/doc/romcrc.html', 'README.asciidoc', ASCIIDOC_BACKEND='html5', ASCIIDOC_ATTRIBUTES=aAttribs)
+
+
+#----------------------------------------------------------------------------
+#
+# Build the artifact.
+#
+
+tArcList = env_default.ArchiveList('zip')
+
+tArcList.AddFiles('doc/',
+	doc)
+
+tArcList.AddFiles('netx/',
+	crctest_netx500,
+	crctest_netx56,
+	crctest_netx50,
+	crctest_netx10)
+
+tArcList.AddFiles('templates/',
+	'templates/test.lua')
+
+tArcList.AddFiles('',
+	'ivy/org.muhkuh.tests.romcrc/install.xml')
+
+strArtifactPath = 'targets/ivy/repository/org/muhkuh/tests/romcrc/%s' % env_default.ArtifactVersion_Get()
+tArc = env_default.Archive(os.path.join(strArtifactPath, 'romcrc-%s.zip' % env_default.ArtifactVersion_Get()), None, ARCHIVE_CONTENTS=tArcList)
+
+env_default.ArtifactVersion(os.path.join(strArtifactPath, 'ivy-%s.xml' % env_default.ArtifactVersion_Get()), 'ivy/org.muhkuh.tests.romcrc/ivy.xml')
 
 
 #----------------------------------------------------------------------------
