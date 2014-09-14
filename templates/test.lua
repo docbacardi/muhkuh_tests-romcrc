@@ -1,8 +1,8 @@
-module("${MODULE_NAME}", package.seeall)
+module("@MODULE_NAME@", package.seeall)
 
 require("parameters")
 
-CFG_strTestName = "${TEST_NAME}"
+CFG_strTestName = "@TEST_NAME@"
 
 CFG_aParameterDefinitions = {
 	{
