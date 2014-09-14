@@ -7,6 +7,10 @@ env:
   - secure: "lfHLc07ZSyiFl5F6Zce5jzjG81LtSQsdHFV625yXrtuF0ylDFswOoYh/NRO9nQkwUkApUVZ84ogSyEQbbHiOC2Py15DakABTJIOIJFlJfNBrU2ywmpvXKkW3DrB8JCCdsF+kfhfhPm3jaVtvQ68f7IIyyAK43p6b0CaoP/swsR8="
 
 
+install:
+  - pip install -q requests
+
+
 # This is the command to build the whole project and pack the results in a distributable form.
 script: 
   - python mbs/mbs
