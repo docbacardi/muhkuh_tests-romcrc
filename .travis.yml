@@ -1,10 +1,10 @@
 language: python
 python:
-  - "2.7"
+  - '2.7'
 
 
 env:
-  - secure: "lfHLc07ZSyiFl5F6Zce5jzjG81LtSQsdHFV625yXrtuF0ylDFswOoYh/NRO9nQkwUkApUVZ84ogSyEQbbHiOC2Py15DakABTJIOIJFlJfNBrU2ywmpvXKkW3DrB8JCCdsF+kfhfhPm3jaVtvQ68f7IIyyAK43p6b0CaoP/swsR8="
+  - secure: lfHLc07ZSyiFl5F6Zce5jzjG81LtSQsdHFV625yXrtuF0ylDFswOoYh/NRO9nQkwUkApUVZ84ogSyEQbbHiOC2Py15DakABTJIOIJFlJfNBrU2ywmpvXKkW3DrB8JCCdsF+kfhfhPm3jaVtvQ68f7IIyyAK43p6b0CaoP/swsR8=
 
 
 install:
@@ -12,6 +12,19 @@ install:
 
 
 # This is the command to build the whole project and pack the results in a distributable form.
-script: 
+script:
   - python mbs/mbs
   - python ivy/deploy.py targets/artifacts.xml
+
+
+deploy:
+  provider: releases
+  api_key:
+    secure: LYA6Zy8EQWEQoLHzYL84k7U8TKc0PCSOC12crAmf1Qyd4hjjGyvH2WRokPNuIN5Y0Fniv06ICOqvRJwV2i+2zIP/JfFknAPvqyIWaV9CoihXuv7cUnBDuLR1ob/Tk9MVvyH5ql7QwD9igVRAZAJMG9EUp15hcBrln3HFIwuzeHg=
+  file:
+    - targets/ivy/romcrc.zip
+    - targets/ivy/ivy.xml
+  skip_cleanup: true
+  on:
+    repo: muhkuh-sys/org.muhkuh.tests-romcrc
+    tags: true
